@@ -5,13 +5,16 @@
   "main": "dist/index.js",
   "type": "module",
   "bin": {
-    "deal-radar-mcp": "./dist/index.js"
+    "deal-radar-mcp": "./dist/index.js",
+    "deal-radar": "./bin/deal-radar.js"
   },
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
-    "test": "node --test"
+    "cli": "tsx src/cli.ts",
+    "web": "tsx src/cli.ts web",
+    "test": "node test/test.js"
   },
   "keywords": [
     "mcp",
@@ -20,6 +23,8 @@
     "price-tracker",
     "amazon",
     "flipkart",
+    "croma",
+    "myntra",
     "deals"
   ],
   "author": "Antigravity & Shri-Ram",
@@ -36,4 +41,3 @@
     "typescript": "^5.8.2"
   }
 }
-

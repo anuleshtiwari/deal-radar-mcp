@@ -8,21 +8,78 @@
 
 **Deal Radar MCP** empowers AI assistants (Claude, Cursor, Antigravity, Gemini, Zed) to monitor e-commerce prices, uncover trending discounts, calculate real effective prices (including bank/coupon offers), track historical lows, and fire alerts when prices drop to your target.
 
-Built with an **extensible, plug-and-play adapter architecture**, Deal Radar works out-of-the-box with **Amazon** and **Flipkart**, while allowing users and agents to add support for *any e-commerce website on the internet* via simple declarative JSON configs.
+Built with an **extensible, plug-and-play adapter architecture**, Deal Radar works out-of-the-box with **Amazon**, **Flipkart**, **Croma**, **Myntra**, **Reliance Digital**, **Tata CLiQ**, **eBay**, plus a **universal Schema.org/OpenGraph fallback scraper** that extracts product details and prices from virtually any online store.
 
 ---
 
 ## 🌟 Key Features
 
-- 🔍 **Multi-Store Price Comparison**: Search Amazon, Flipkart, and custom stores in parallel to find the lowest price in seconds.
+- 🔍 **Multi-Store Price Comparison**: Search Amazon, Flipkart, Croma, Myntra, Reliance Digital, and eBay in parallel to find the lowest price in seconds.
 - 💳 **Effective Price Intelligence**: Calculates true out-of-pocket costs by factoring in instant bank discounts (HDFC, ICICI, Axis), coupon codes, and delivery charges.
 - 📉 **Persistent Watchlist & History**: Automatically snapshots prices over time to pinpoint all-time lows and detect artificial markup before sales.
-- 🔔 **Autonomous Price Drop Alerts**: Set target price thresholds; the server flags drops and alerts your agent whenever an item hits your desired price.
-- 🔌 **Dynamic Store Adapters**: Add any new retail store (Croma, Myntra, Reliance Digital, Walmart, eBay) on the fly without writing code—just define CSS selectors.
+- 🔔 **Autonomous Price Drop Alerts & Poller**: Background cron engine periodically audits watchlist items and dispatches desktop notifications and MCP alerts.
+- 🖥️ **Interactive Web Dashboard**: Beautiful local web UI (`http://localhost:3333`) for visual tracking, price comparisons, and one-click alert management.
+- ⌨️ **Command-Line Interface (CLI)**: Full-featured CLI tool (`deal-radar search`, `deal-radar track`, `deal-radar alert`, etc.).
+- 🔌 **Dynamic Store Adapters**: Add any new store by dropping a JSON configuration in `stores/` or dynamically registering via MCP.
 
 ---
 
-## 🛠️ MCP Tools
+## 🌐 Supported Stores Out of the Box
+
+| Store | ID | Supported Domains | Adapter Type |
+|:---|:---|:---|:---|
+| **Amazon** | `amazon` | `amazon.in`, `amazon.com`, `amazon.co.uk`, `amazon.de`, `amzn.in` | Native Scraper + Bank Offer Parser |
+| **Flipkart** | `flipkart` | `flipkart.com`, `dl.flipkart.com` | Native Scraper + Bank Offer Parser |
+| **Croma** | `croma` | `croma.com` | Declarative Selector Adapter |
+| **eBay** | `ebay` | `ebay.com` | Declarative Selector Adapter |
+| **Myntra** | `myntra` | `myntra.com` | Declarative Selector Adapter |
+| **Reliance Digital** | `reliance_digital` | `reliancedigital.in` | Declarative Selector Adapter |
+| **Tata CLiQ** | `tata_cliq` | `tatacliq.com` | Declarative Selector Adapter |
+| **Universal Fallback** | `generic` | *Any URL on the web* | Schema.org JSON-LD & OpenGraph |
+
+---
+
+## 💻 CLI Usage
+
+```bash
+# Search deals across all stores
+npm run cli -- search "Sony WH-1000XM5" --limit 5
+
+# Inspect and track a specific product URL
+npm run cli -- track "https://www.amazon.in/dp/B09XS7JWHH"
+
+# Set a price drop alert
+npm run cli -- alert "https://www.amazon.in/dp/B09XS7JWHH" 24999
+
+# View your monitored watchlist
+npm run cli -- watchlist
+
+# Check price fluctuation history
+npm run cli -- history "https://www.amazon.in/dp/B09XS7JWHH"
+
+# Manually trigger an immediate price-drop poll
+npm run cli -- poll
+
+# Launch the visual Web Dashboard
+npm run web
+```
+
+---
+
+## 🖥️ Local Web Dashboard
+
+Launch the web dashboard on port `3333`:
+```bash
+npm run web
+```
+Open **[http://localhost:3333](http://localhost:3333)** in your browser to:
+- Browse live deals across multiple storefronts with instant filters.
+- Visually monitor your tracked items and price drop alerts.
+- Check price history and trigger one-click checks.
+
+---
+
+## 🛠️ MCP Tools Reference
 
 | Tool | Description | Key Arguments |
 |:---|:---|:---|
@@ -34,36 +91,19 @@ Built with an **extensible, plug-and-play adapter architecture**, Deal Radar wor
 | `compare_prices` | Compare a product query across all stores side-by-side with savings | `query` |
 | `list_watchlist` | List all currently monitored products and alert statuses | *(none)* |
 | `delete_price_alert`| Remove a product from the alert watchlist | `id` |
+| `start_alert_poller`| Start periodic background polling for price drops | `intervalMinutes` (default: 30) |
+| `stop_alert_poller` | Stop background poller | *(none)* |
+| `get_poller_status` | Retrieve poller status, interval, and total checks | *(none)* |
+| `poll_alerts_now`   | Trigger immediate audit of all watchlist items | *(none)* |
 | `add_store_adapter` | Register a new e-commerce store with declarative selectors | `id`, `name`, `domains`, `selectors` |
 | `list_supported_stores` | List all built-in and user-configured store adapters | *(none)* |
 
 ---
 
-## 📦 MCP Resources & Prompts
+## 🚀 Connecting to MCP Clients
 
-### Resources
-- `deals://watchlist` — Real-time JSON inventory of all monitored products and alert states.
-- `deals://stores` — Directory of all active store adapters and supported domains.
-
-### Pre-Built Prompts
-- **`smart-deal-hunter`**: Analyzes a product query across all storefronts, checks bank promotions, and recommends where and when to buy.
-- **`price-drop-audit`**: Audits your active watchlist and summarizes any products that recently met or exceeded target discounts.
-
----
-
-## 🚀 Quickstart & Installation
-
-### 1. Build from Source
-```bash
-git clone https://github.com/your-username/deal-radar-mcp.git
-cd deal-radar-mcp
-npm install
-npm run build
-```
-
-### 2. Connect to Your AI Client
-
-#### Claude Desktop (`claude_desktop_config.json`)
+### Claude Desktop
+Add to your `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
@@ -75,7 +115,8 @@ npm run build
 }
 ```
 
-#### Antigravity / Gemini CLI (`~/.gemini/config/mcp_config.json`)
+### Antigravity / Gemini CLI
+Add to `~/.gemini/config/mcp_config.json`:
 ```json
 {
   "mcpServers": {
@@ -85,68 +126,9 @@ npm run build
     }
   }
 }
-```
-
-#### Cursor (`Settings` ➔ `Features` ➔ `MCP Servers`)
-- **Name**: `deal-radar`
-- **Type**: `command`
-- **Command**: `node /home/shri-ram/deal-radar-mcp/dist/index.js`
-
----
-
-## 🔌 Adding Any New E-Commerce Website
-
-You or your AI agent can add a new store dynamically by invoking `add_store_adapter` or saving a JSON file in `stores/`:
-
-```json
-{
-  "id": "croma",
-  "name": "Croma Electronics",
-  "domains": ["croma.com", "www.croma.com"],
-  "searchUrlTemplate": "https://www.croma.com/searchB?q={query}%3Arelevance&text={query}",
-  "selectors": {
-    "searchItem": "li.product-item",
-    "searchTitle": "h3.product-title a",
-    "searchPrice": "span.amount",
-    "searchOriginalPrice": "span.amount.old-price",
-    "searchUrl": "h3.product-title a",
-    "productTitle": "h1.pd-title",
-    "productPrice": "span.pdp-cp",
-    "productOriginalPrice": "span.pdp-mrp"
-  },
-  "currencyCode": "INR"
-}
-```
-
----
-
-## 📂 Architecture
-
-```
-deal-radar-mcp/
-├── src/
-│   ├── index.ts               # Stdio MCP entry point
-│   ├── server.ts              # Tool, Resource, and Prompt definitions
-│   ├── engine/
-│   │   ├── tracker.ts         # Deal comparison, watchlist & price drop detection
-│   │   ├── storage.ts         # Persistent JSON/SQLite snapshot storage
-│   │   └── httpClient.ts      # HTTP client with rotating UA & headers
-│   ├── adapters/
-│   │   ├── base.ts            # Abstract StoreAdapter interface
-│   │   ├── registry.ts        # Dynamic adapter loader & store manager
-│   │   ├── amazon.ts          # Amazon (India & Global) parser & bank offer scraper
-│   │   ├── flipkart.ts        # Flipkart parser & instant discount extractor
-│   │   └── declarative.ts     # Universal CSS selector adapter for community sites
-│   └── types/
-│       └── index.ts           # TypeScript interfaces & MCP schemas
-├── stores/                    # Declarative community store definitions
-│   └── croma.json
-└── test/
-    └── test.js                # Integration test suite
 ```
 
 ---
 
 ## 📄 License
 MIT © Antigravity & Shri-Ram
-

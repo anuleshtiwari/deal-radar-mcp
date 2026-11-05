@@ -1,0 +1,19 @@
+{
+  "id": "tata_cliq",
+  "name": "Tata CLiQ",
+  "domains": ["tatacliq.com", "www.tatacliq.com"],
+  "searchUrlTemplate": "https://www.tatacliq.com/search/?searchCategory=all&text={query}",
+  "selectors": {
+    "searchItem": "div.ProductDescription__content",
+    "searchTitle": "h2.ProductDescription__title",
+    "searchPrice": "h3.ProductDescription__boldText",
+    "searchOriginalPrice": "span.ProductDescription__discountText",
+    "searchUrl": "a",
+    "searchRating": "span.ProductDescription__rating",
+    "productTitle": "h1.ProductDetailsMainCard__productName",
+    "productPrice": "h3.ProductDetailsMainCard__price",
+    "productOriginalPrice": "span.ProductDetailsMainCard__mrpPrice"
+  },
+  "currencyCode": "INR"
+}
+

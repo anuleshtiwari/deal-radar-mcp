@@ -1,0 +1,19 @@
+{
+  "id": "reliance_digital",
+  "name": "Reliance Digital",
+  "domains": ["reliancedigital.in", "www.reliancedigital.in"],
+  "searchUrlTemplate": "https://www.reliancedigital.in/search?q={query}:relevance",
+  "selectors": {
+    "searchItem": "div.sp__product",
+    "searchTitle": "p.sp__name",
+    "searchPrice": "span.gDIntR, span.TextWeb__Text-sc-1t022w7-0",
+    "searchOriginalPrice": "span.mrp",
+    "searchUrl": "a",
+    "searchRating": "span.rating-val",
+    "productTitle": "h1.pdp__title",
+    "productPrice": "span.pdp__offerPrice span",
+    "productOriginalPrice": "span.pdp__mrpPrice"
+  },
+  "currencyCode": "INR"
+}
+

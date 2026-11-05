@@ -1,0 +1,19 @@
+{
+  "id": "ebay",
+  "name": "eBay",
+  "domains": ["ebay.com", "www.ebay.com"],
+  "searchUrlTemplate": "https://www.ebay.com/sch/i.html?_nkw={query}",
+  "selectors": {
+    "searchItem": "li.s-item",
+    "searchTitle": "div.s-item__title",
+    "searchPrice": "span.s-item__price",
+    "searchOriginalPrice": "span.s-item__trending-price span.STP",
+    "searchUrl": "a.s-item__link",
+    "searchRating": "div.x-star-rating span",
+    "productTitle": "h1.x-item-title__mainTitle span",
+    "productPrice": "div.x-price-primary span.ux-textspans",
+    "productOriginalPrice": "span.ux-textspans--STRIKETHROUGH"
+  },
+  "currencyCode": "USD"
+}
+

@@ -1,0 +1,19 @@
+{
+  "id": "myntra",
+  "name": "Myntra",
+  "domains": ["myntra.com", "www.myntra.com"],
+  "searchUrlTemplate": "https://www.myntra.com/{query}",
+  "selectors": {
+    "searchItem": "li.product-base",
+    "searchTitle": "h4.product-product",
+    "searchPrice": "span.product-discountedPrice",
+    "searchOriginalPrice": "span.product-strike",
+    "searchUrl": "a",
+    "searchRating": "div.product-ratingsContainer span",
+    "productTitle": "h1.pdp-title, h1.pdp-name",
+    "productPrice": "span.pdp-price strong, span.pdp-price",
+    "productOriginalPrice": "span.pdp-mrp s"
+  },
+  "currencyCode": "INR"
+}
+

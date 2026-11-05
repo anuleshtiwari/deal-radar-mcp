@@ -13,6 +13,7 @@ import { defaultTrackerEngine } from './engine/tracker.js';
 import { defaultStorage } from './engine/storage.js';
 import { defaultRegistry } from './adapters/registry.js';
 import { DeclarativeStoreConfig } from './types/index.js';
+import { defaultPoller } from './engine/cron.js';
 
 export function createServer(): Server {
   const server = new Server(
@@ -189,6 +190,43 @@ export function createServer(): Server {
               currencyCode: { type: 'string', description: 'Currency code like "INR", "USD"' }
             },
             required: ['id', 'name', 'domains', 'searchUrlTemplate', 'selectors']
+          }
+        },
+        {
+          name: 'start_alert_poller',
+          description: 'Start background cron polling for price drops on all active watchlist items at regular intervals.',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              intervalMinutes: {
+                type: 'number',
+                description: 'Polling interval in minutes (default: 30)'
+              }
+            }
+          }
+        },
+        {
+          name: 'stop_alert_poller',
+          description: 'Stop the active background price alert poller.',
+          inputSchema: {
+            type: 'object',
+            properties: {}
+          }
+        },
+        {
+          name: 'get_poller_status',
+          description: 'Check whether the background price poller is running, interval, and stats.',
+          inputSchema: {
+            type: 'object',
+            properties: {}
+          }
+        },
+        {
+          name: 'poll_alerts_now',
+          description: 'Trigger an immediate check across all active watchlist items for price drops.',
+          inputSchema: {
+            type: 'object',
+            properties: {}
           }
         },
         {
@@ -383,6 +421,35 @@ export function createServer(): Server {
                 text: JSON.stringify({ count: stores.length, stores }, null, 2)
               }
             ]
+          };
+        }
+
+                case 'start_alert_poller': {
+          const interval = typeof args?.intervalMinutes === 'number' ? args.intervalMinutes : 30;
+          const status = defaultPoller.start(interval);
+          return {
+            content: [{ type: 'text', text: JSON.stringify({ message: 'Poller started', status }, null, 2) }]
+          };
+        }
+
+        case 'stop_alert_poller': {
+          const status = defaultPoller.stop();
+          return {
+            content: [{ type: 'text', text: JSON.stringify({ message: 'Poller stopped', status }, null, 2) }]
+          };
+        }
+
+        case 'get_poller_status': {
+          const status = defaultPoller.getStatus();
+          return {
+            content: [{ type: 'text', text: JSON.stringify(status, null, 2) }]
+          };
+        }
+
+        case 'poll_alerts_now': {
+          const result = await defaultPoller.pollNow();
+          return {
+            content: [{ type: 'text', text: JSON.stringify(result, null, 2) }]
           };
         }
 
