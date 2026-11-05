@@ -149,3 +149,4 @@ deal-radar-mcp/
 
 ## 📄 License
 MIT © Antigravity & Shri-Ram
+

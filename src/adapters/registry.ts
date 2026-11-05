@@ -53,3 +53,4 @@ export class AdapterRegistry {
 }
 
 export const defaultRegistry = new AdapterRegistry();
+

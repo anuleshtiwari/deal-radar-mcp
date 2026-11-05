@@ -93,3 +93,4 @@ export interface StoreAdapter {
   search(query: string, options?: SearchOptions): Promise<Product[]>;
   scrapeProduct(url: string): Promise<Product>;
 }
+

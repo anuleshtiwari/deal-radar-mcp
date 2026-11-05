@@ -24,3 +24,4 @@ export abstract class BaseAdapter implements StoreAdapter {
   abstract search(query: string, options?: SearchOptions): Promise<Product[]>;
   abstract scrapeProduct(url: string): Promise<Product>;
 }
+

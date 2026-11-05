@@ -170,3 +170,4 @@ export class FlipkartAdapter extends BaseAdapter {
     };
   }
 }
+

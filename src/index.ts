@@ -13,3 +13,4 @@ main().catch((error) => {
   console.error('Fatal error in Deal Radar MCP server:', error);
   process.exit(1);
 });
+
