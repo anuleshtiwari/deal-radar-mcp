@@ -1,0 +1,18 @@
+{
+  "id": "croma",
+  "name": "Croma Electronics",
+  "domains": ["croma.com", "www.croma.com"],
+  "searchUrlTemplate": "https://www.croma.com/searchB?q={query}%3Arelevance&text={query}",
+  "selectors": {
+    "searchItem": "li.product-item",
+    "searchTitle": "h3.product-title a",
+    "searchPrice": "span.amount",
+    "searchOriginalPrice": "span.amount.old-price",
+    "searchUrl": "h3.product-title a",
+    "searchRating": "span.rating-text",
+    "productTitle": "h1.pd-title",
+    "productPrice": "span.pdp-cp",
+    "productOriginalPrice": "span.pdp-mrp"
+  },
+  "currencyCode": "INR"
+}
